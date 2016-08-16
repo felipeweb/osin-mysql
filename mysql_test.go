@@ -220,12 +220,9 @@ func TestRefreshOperations(t *testing.T) {
 
 func TestErrors(t *testing.T) {
 	assert.NotNil(t, store.CreateClient(&osin.DefaultClient{Id: "dupe"}))
-	assert.NotNil(t, store.CreateClient(&osin.DefaultClient{Id: "dupe"}))
 	assert.NotNil(t, store.CreateClient(&osin.DefaultClient{Id: "foo", UserData: struct{}{}}))
 	assert.NotNil(t, store.SaveAccess(&osin.AccessData{AccessToken: "", AccessData: &osin.AccessData{}, AuthorizeData: &osin.AuthorizeData{}}))
 	assert.NotNil(t, store.SaveAuthorize(&osin.AuthorizeData{Code: "a", Client: &osin.DefaultClient{}}))
-	assert.NotNil(t, store.SaveAuthorize(&osin.AuthorizeData{Code: "a", Client: &osin.DefaultClient{}}))
-	assert.NotNil(t, store.SaveAuthorize(&osin.AuthorizeData{Code: "b", Client: &osin.DefaultClient{}, UserData: struct{}{}}))
 	_, err := store.LoadAccess("")
 	assert.Equal(t, notFoundError, err)
 	_, err = store.LoadAuthorize("")
@@ -257,5 +254,5 @@ func getClient(t *testing.T, store Storage, set osin.Client) {
 }
 
 func createClient(t *testing.T, store Storage, set osin.Client) {
-	require.NotNil(t, store.CreateClient(set))
+	require.Nil(t, store.CreateClient(set))
 }

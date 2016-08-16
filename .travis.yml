@@ -13,7 +13,7 @@ go:
   - 1.7
 
 before_install:
-  - docker pull mysql
+  - docker pull mysql/mysql-server
   - go get -u github.com/tools/godep
 
 install:

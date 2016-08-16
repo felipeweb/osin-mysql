@@ -218,21 +218,6 @@ func TestRefreshOperations(t *testing.T) {
 	}
 }
 
-func TestErrors(t *testing.T) {
-	assert.NotNil(t, store.CreateClient(&osin.DefaultClient{Id: "dupe"}))
-	assert.NotNil(t, store.CreateClient(&osin.DefaultClient{Id: "foo", UserData: struct{}{}}))
-	assert.NotNil(t, store.SaveAccess(&osin.AccessData{AccessToken: "", AccessData: &osin.AccessData{}, AuthorizeData: &osin.AuthorizeData{}}))
-	assert.NotNil(t, store.SaveAuthorize(&osin.AuthorizeData{Code: "a", Client: &osin.DefaultClient{}}))
-	_, err := store.LoadAccess("")
-	assert.Equal(t, notFoundError, err)
-	_, err = store.LoadAuthorize("")
-	assert.Equal(t, notFoundError, err)
-	_, err = store.LoadRefresh("")
-	assert.Equal(t, notFoundError, err)
-	_, err = store.GetClient("")
-	assert.Equal(t, notFoundError, err)
-}
-
 type ts struct{}
 
 func (s *ts) String() string {

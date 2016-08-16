@@ -3,7 +3,7 @@ sudo: required
 language: go
 
 services:
-  - docker
+  - mysql
 
 env:
   - DOCKERTEST_BIND_LOCALHOST=true
@@ -17,6 +17,7 @@ before_install:
 
 install:
   - godep restore
+  - mysql -uroot -e "create database osin"
 
 script:
   - go test -v -race ./...

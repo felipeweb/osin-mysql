@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"github.com/RangelReale/osin"
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/ory-am/dockertest"
 	"github.com/pborman/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -20,14 +19,13 @@ var store *Storage
 var userDataMock = "bar"
 
 func TestMain(m *testing.M) {
-	c, err := dockertest.ConnectToMySQL(60, time.Second, func(url string) bool {
-		var err error
-		db, err = sql.Open("mysql", url)
-		if err != nil {
-			return false
-		}
-		return db.Ping() == nil
-	})
+	var err error
+	db, err = sql.Open("mysql", "root:@tcp(localhost:3306)/osin")
+	if err != nil {
+		log.Fatalf("Could not open connect to database: %s", err)
+
+	}
+	err = db.Ping()
 
 	if err != nil {
 		log.Fatalf("Could not connect to database: %s", err)
@@ -40,14 +38,7 @@ func TestMain(m *testing.M) {
 
 	retCode := m.Run()
 
-	// force teardown
-	tearDown(c)
-
 	os.Exit(retCode)
-}
-
-func tearDown(c dockertest.ContainerID) {
-	c.KillRemove()
 }
 
 func TestClientOperations(t *testing.T) {

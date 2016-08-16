@@ -5,15 +5,15 @@ language: go
 os:
   - osx
 
-services:
-  - mysql
-
 go:
   - 1.6.3
   - 1.7
 
 before_install:
   - go get -u github.com/tools/godep
+  - /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+  - brew install mysql
+  - mysql.server start
 
 install:
   - godep restore

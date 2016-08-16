@@ -5,6 +5,9 @@ language: go
 services:
   - mysql
 
+os:
+  - osx
+
 go:
   - 1.6.3
   - 1.7

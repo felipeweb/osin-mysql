@@ -20,7 +20,7 @@ var store *Storage
 var userDataMock = "bar"
 
 func TestMain(m *testing.M) {
-	c, err := dockertest.ConnectToMySQL(15, time.Second, func(url string) bool {
+	c, err := dockertest.ConnectToMySQL(60, time.Second, func(url string) bool {
 		var err error
 		db, err = sql.Open("mysql", url)
 		if err != nil {

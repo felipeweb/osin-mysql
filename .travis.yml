@@ -14,7 +14,7 @@ go:
 
 before_install:
   - docker pull mysql
-   - go get -u github.com/tools/godep
+  - go get -u github.com/tools/godep
 
 install:
   - godep restore

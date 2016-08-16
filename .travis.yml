@@ -9,6 +9,7 @@ env:
   - DOCKER_BIND_LOCALHOST=true
 
 go:
+  - 1.6.3
   - 1.7
 
 before_install:

@@ -2,11 +2,11 @@ sudo: required
 
 language: go
 
-services:
-  - mysql
-
 os:
   - osx
+
+services:
+  - mysql
 
 go:
   - 1.6.3
@@ -17,7 +17,7 @@ before_install:
 
 install:
   - godep restore
-  - mysql -uroot -e "create database osin"
+  - mysql -uroot -e 'create database osin;'
 
 script:
   - go test -v -race ./...

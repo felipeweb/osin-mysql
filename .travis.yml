@@ -6,17 +6,16 @@ os:
   - osx
 
 go:
-  - 1.6.3
   - 1.7
 
 before_install:
-  - go get -u github.com/tools/godep
+  - go get -u github.com/kardianos/govendor
   - brew install mysql
   - mysql.server start
 
 install:
-  - godep restore
+  - govendor sync
   - mysql -uroot -e 'create database osin;'
 
 script:
-  - go test -v -race ./...
+  - govendor test -v -race ./...

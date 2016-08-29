@@ -201,7 +201,7 @@ func TestRefreshOperations(t *testing.T) {
 		_, err := store.LoadRefresh(c.access.RefreshToken)
 		require.NotNil(t, err)
 
-		require.NotNil(t, store.RemoveRefresh(c.access.RefreshToken))
+		require.Nil(t, store.RemoveRefresh(c.access.RefreshToken))
 		_, err = store.LoadRefresh(c.access.RefreshToken)
 
 		require.NotNil(t, err, "Case %d", k)

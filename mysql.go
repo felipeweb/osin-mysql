@@ -287,7 +287,7 @@ func (s *Storage) LoadRefresh(code string) (*osin.AccessData, error) {
 
 // RemoveRefresh revokes or deletes refresh AccessData.
 func (s *Storage) RemoveRefresh(code string) error {
-	_, err := s.db.Exec("DELETE FROM refresh WHERE token=$1", code)
+	_, err := s.db.Exec("DELETE FROM refresh WHERE token=?", code)
 	if err != nil {
 		return merry.Wrap(err)
 	}

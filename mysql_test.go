@@ -150,7 +150,6 @@ func TestAccessOperations(t *testing.T) {
 	_, err := store.LoadAccess(access.AccessToken)
 	require.NotNil(t, err)
 
-
 	require.Nil(t, store.RemoveAuthorize(authorize.Code))
 	_, err = store.LoadAccess(access.AccessToken)
 	require.NotNil(t, err)

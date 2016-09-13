@@ -1,9 +1,9 @@
 package gopher_utils
 
 import (
+	"crypto/md5"
 	"crypto/sha256"
 	"crypto/sha512"
-	"crypto/md5"
 	"encoding/hex"
 )
 

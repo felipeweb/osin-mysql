@@ -4,10 +4,10 @@ package mysql
 import (
 	"database/sql"
 	"github.com/RangelReale/osin"
+	"github.com/ansel1/merry"
+	"github.com/felipeweb/gopher-utils"
 	"log"
 	"time"
-	"github.com/felipeweb/gopher-utils"
-	"github.com/ansel1/merry"
 )
 
 var schemas = []string{`CREATE TABLE IF NOT EXISTS client (

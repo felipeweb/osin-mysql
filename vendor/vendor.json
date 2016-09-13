@@ -3,10 +3,10 @@
 	"ignore": "test",
 	"package": [
 		{
-			"checksumSHA1": "gi8GMdlc3FiJUGjtsa4aJur9pDg=",
+			"checksumSHA1": "nv8LevVIQfd4fvQYFfyCooR70yk=",
 			"path": "github.com/RangelReale/osin",
-			"revision": "413612f25cea962070289aa09fbc6bbb1250e226",
-			"revisionTime": "2016-08-01T20:32:33Z"
+			"revision": "ac3d4ebc089d947be64c6ff1217ff98b805be878",
+			"revisionTime": "2016-09-12T12:00:43Z"
 		},
 		{
 			"checksumSHA1": "7QY7ncMpCbVHNntoZp0SGQnMUqI=",
@@ -15,17 +15,10 @@
 			"revisionTime": "2016-07-15T19:44:31Z"
 		},
 		{
-			"checksumSHA1": "5rPfda8jFccr3A6heL+JAmi9K9g=",
-			"origin": "github.com/stretchr/testify/vendor/github.com/davecgh/go-spew/spew",
-			"path": "github.com/davecgh/go-spew/spew",
-			"revision": "d77da356e56a7428ad25149ca77381849a6a5232",
-			"revisionTime": "2016-06-15T09:26:46Z"
-		},
-		{
-			"checksumSHA1": "sowZR1d3qtxiXdj9v9mr6TouOYg=",
+			"checksumSHA1": "dSyceZJrHmngVNi+sEvpNjNYuYc=",
 			"path": "github.com/felipeweb/gopher-utils",
-			"revision": "63770d1cfb671cbfd6249e314e0f4df9c47785be",
-			"revisionTime": "2016-06-17T20:41:57Z"
+			"revision": "8b64f695a1b3bb77bff8eecf236c80c999ef1e39",
+			"revisionTime": "2016-09-11T21:11:46Z"
 		},
 		{
 			"checksumSHA1": "izyjPiujV6Bi1yvzYi3q2I8mC8A=",
@@ -40,29 +33,10 @@
 			"revisionTime": "2016-08-02T11:38:42Z"
 		},
 		{
-			"checksumSHA1": "xN14ZoFcgefABp24aowYtQVMDsc=",
+			"checksumSHA1": "mhvIMH8oAtOiEyg37zWKmgb+6v4=",
 			"path": "github.com/pborman/uuid",
-			"revision": "c55201b036063326c5b1b89ccfe45a184973d073",
-			"revisionTime": "2016-02-16T16:37:10Z"
-		},
-		{
-			"checksumSHA1": "zKKp5SZ3d3ycKe4EKMNT0BqAWBw=",
-			"origin": "github.com/stretchr/testify/vendor/github.com/pmezard/go-difflib/difflib",
-			"path": "github.com/pmezard/go-difflib/difflib",
-			"revision": "d77da356e56a7428ad25149ca77381849a6a5232",
-			"revisionTime": "2016-06-15T09:26:46Z"
-		},
-		{
-			"checksumSHA1": "iydUphwYqZRq3WhstEdGsbvBAKs=",
-			"path": "github.com/stretchr/testify/assert",
-			"revision": "d77da356e56a7428ad25149ca77381849a6a5232",
-			"revisionTime": "2016-06-15T09:26:46Z"
-		},
-		{
-			"checksumSHA1": "P9FJpir2c4G5PA46qEkaWy3l60U=",
-			"path": "github.com/stretchr/testify/require",
-			"revision": "d77da356e56a7428ad25149ca77381849a6a5232",
-			"revisionTime": "2016-06-15T09:26:46Z"
+			"revision": "b984ec7fa9ff9e428bd0cf0abf429384dfbe3e37",
+			"revisionTime": "2016-08-24T21:06:00Z"
 		}
 	],
 	"rootPath": "github.com/felipeweb/osin-mysql"

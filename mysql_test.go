@@ -73,7 +73,7 @@ func TestAuthorizeOperations(t *testing.T) {
 		// Test remove
 		require.Nil(t, store.RemoveAuthorize(authorize.Code))
 		_, err = store.LoadAuthorize(authorize.Code)
-		require.Nil(t, err)
+		require.NotNil(t, err)
 	}
 
 }

@@ -67,13 +67,13 @@ func TestAuthorizeOperations(t *testing.T) {
 
 		// Test fetch
 		_, err := store.LoadAuthorize(authorize.Code)
-		require.NotNil(t, err)
+		require.Nil(t, err)
 		require.Equal(t, authorize.CreatedAt.Unix(), authorize.CreatedAt.Unix())
 
 		// Test remove
 		require.Nil(t, store.RemoveAuthorize(authorize.Code))
 		_, err = store.LoadAuthorize(authorize.Code)
-		require.NotNil(t, err)
+		require.Nil(t, err)
 	}
 
 }

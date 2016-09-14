@@ -9,13 +9,12 @@ go:
   - 1.7.1
 
 before_install:
-  - go get -u github.com/kardianos/govendor
+  - go get -v -t ./...
   - brew install mysql
   - mysql.server start
 
 install:
-  - govendor sync
   - mysql -uroot -e 'create database osin;'
 
 script:
-  - govendor test -v -race ./...
+  - go test -v -race ./...

@@ -19,7 +19,7 @@ var userDataMock = "bar"
 
 func TestMain(m *testing.M) {
 	var err error
-	db, err = sql.Open("mysql", "root:@tcp(localhost:3306)/osin")
+	db, err = sql.Open("mysql", "root:@tcp(localhost:3306)/osin?parseTime=true")
 	if err != nil {
 		log.Fatalf("Could not open connect to database: %s", err)
 

@@ -6,6 +6,7 @@ import (
 	"github.com/RangelReale/osin"
 	"github.com/ansel1/merry"
 	"github.com/felipeweb/gopher-utils"
+	_ "github.com/go-sql-driver/mysql"
 	"log"
 	"time"
 )

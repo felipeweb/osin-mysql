@@ -9,6 +9,12 @@
 			"revisionTime": "2016-09-12T12:00:43Z"
 		},
 		{
+			"checksumSHA1": "J9fk6CroQVatq7iM8Qy3Q9N9YEo=",
+			"path": "github.com/RangelReale/osin/example",
+			"revision": "ac3d4ebc089d947be64c6ff1217ff98b805be878",
+			"revisionTime": "2016-09-12T12:00:43Z"
+		},
+		{
 			"checksumSHA1": "7QY7ncMpCbVHNntoZp0SGQnMUqI=",
 			"path": "github.com/ansel1/merry",
 			"revision": "09670dfdb5ed26edd0e85472922d2e8e022d3070",

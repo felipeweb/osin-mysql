@@ -2,15 +2,16 @@ package mysql
 
 import (
 	"database/sql"
+	"log"
+	"os"
+	"testing"
+	"time"
+
 	"github.com/RangelReale/osin"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/pborman/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"log"
-	"os"
-	"testing"
-	"time"
 )
 
 var db *sql.DB
@@ -30,7 +31,7 @@ func TestMain(m *testing.M) {
 		log.Fatalf("Could not connect to database: %s", err)
 	}
 
-	store = New(db)
+	store = New(db, "osin_")
 	if err = store.CreateSchemas(); err != nil {
 		log.Fatalf("Could not ping database: %v", err)
 	}

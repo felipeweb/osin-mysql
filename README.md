@@ -45,7 +45,7 @@ func main() {
         return nil, err
     }
 
-    store := mysql.New(db)
+    store := mysql.New(db,"osin_")
     store.CreateSchemas()
     server := osin.NewServer(osin.NewServerConfig(), store)
 

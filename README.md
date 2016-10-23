@@ -63,3 +63,6 @@ with SQL, because it is not possible to gob decode or unmarshall the data back, 
 Because osin's storage interface does not support setting the UserData type, **this library tries to convert UserData to string
 and return it as such.** With this, you could for example gob encode (use e.g. base64 encode for SQL storage type compatibility)
 the data before passing it to e.g. `FinishAccessRequest` and decode it when needed.
+
+# 2016-10-23 BREAKING CHANGES
+- Now `New()` recives a db object and a table prefix as parameter

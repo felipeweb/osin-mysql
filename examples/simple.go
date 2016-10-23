@@ -21,7 +21,7 @@ func main() {
 		panic(err)
 	}
 
-	store := mysql.New(db)
+	store := mysql.New(db, "osin_")
 	err = store.CreateSchemas()
 	if err != nil {
 		panic(err)

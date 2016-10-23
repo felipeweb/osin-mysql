@@ -2,7 +2,7 @@
  MySQL storage backend for [osin oauth2](https://github.com/RangelReale/osin).
 Additional to implementing the `osin.Storage` interface, the `github.com/felipeweb/osin-mysql/storage.Storage` interface defines new methods:
 
-```
+
 // CreateClient stores the client in the database and returns an error, if something went wrong.
 CreateClient(client osin.Client) error
 
@@ -12,9 +12,9 @@ UpdateClient(client osin.Client) error
 
 // RemoveClient removes a client (identified by id) from the database. Returns an error if something went wrong.
 RemoveClient(id string) error
-```
 
-## Encrypt your tokens
+
+Encrypt your tokens
 
 Unfortunately, the osin library offers little capabilities for storing credentials like access or refresh tokens in a
 hashed or encrypted way. An attacker could gain access to your database through various attack vectors, steal these
@@ -24,7 +24,7 @@ Please be aware, that this library stores all data as-is and does not perform an
 
 ## Usage
 
-First, install this library with `go get "github.com/felipeweb/osin-mysql"`.
+First, install this library with go get "github.com/felipeweb/osin-mysql".
 
 import (
 	"database/sql"

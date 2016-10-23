@@ -3,20 +3,23 @@ package mysql
 
 import (
 	"database/sql"
+	"fmt"
+	"log"
+	"strings"
+	"time"
+
 	"github.com/RangelReale/osin"
 	"github.com/ansel1/merry"
 	"github.com/felipeweb/gopher-utils"
 	_ "github.com/go-sql-driver/mysql"
-	"log"
-	"time"
 )
 
-var schemas = []string{`CREATE TABLE IF NOT EXISTS client (
+var schemas = []string{`CREATE TABLE IF NOT EXISTS {prefix}client (
 	id           varchar(255) NOT NULL PRIMARY KEY,
 	secret 		 varchar(255) NOT NULL,
 	extra 		 varchar(255) NOT NULL,
 	redirect_uri varchar(255) NOT NULL
-)`, `CREATE TABLE IF NOT EXISTS authorize (
+)`, `CREATE TABLE IF NOT EXISTS {prefix}authorize (
 	client       varchar(255) NOT NULL,
 	code         varchar(255) NOT NULL PRIMARY KEY,
 	expires_in   int(10) NOT NULL,
@@ -25,7 +28,7 @@ var schemas = []string{`CREATE TABLE IF NOT EXISTS client (
 	state        varchar(255) NOT NULL,
 	extra 		 varchar(255) NOT NULL,
 	created_at   timestamp NOT NULL
-)`, `CREATE TABLE IF NOT EXISTS access (
+)`, `CREATE TABLE IF NOT EXISTS {prefix}access (
 	client        varchar(255) NOT NULL,
 	authorize     varchar(255) NOT NULL,
 	previous      varchar(255) NOT NULL,
@@ -36,7 +39,7 @@ var schemas = []string{`CREATE TABLE IF NOT EXISTS client (
 	redirect_uri  varchar(255) NOT NULL,
 	extra 		  varchar(255) NOT NULL,
 	created_at    timestamp NOT NULL
-)`, `CREATE TABLE IF NOT EXISTS refresh (
+)`, `CREATE TABLE IF NOT EXISTS {prefix}refresh (
 	token         varchar(255) NOT NULL PRIMARY KEY,
 	access        varchar(255) NOT NULL
 )`}
@@ -45,17 +48,19 @@ var notFoundError = merry.New("Not found")
 
 // Storage implements interface "github.com/RangelReale/osin".Storage and interface "github.com/felipeweb/osin-mysql/storage".Storage
 type Storage struct {
-	db *sql.DB
+	db          *sql.DB
+	tablePrefix string
 }
 
 // New returns a new mysql storage instance.
-func New(db *sql.DB) *Storage {
-	return &Storage{db}
+func New(db *sql.DB, tablePrefix string) *Storage {
+	return &Storage{db, tablePrefix}
 }
 
 // CreateSchemas creates the schemata, if they do not exist yet in the database. Returns an error if something went wrong.
 func (s *Storage) CreateSchemas() error {
 	for k, schema := range schemas {
+		schema := strings.Replace(schema, "{prefix}", s.tablePrefix, 4)
 		if _, err := s.db.Exec(schema); err != nil {
 			log.Printf("Error creating schema %d: %s", k, schema)
 			return err
@@ -78,7 +83,7 @@ func (s *Storage) Close() {
 
 // GetClient loads the client by id
 func (s *Storage) GetClient(id string) (osin.Client, error) {
-	row := s.db.QueryRow("SELECT id, secret, redirect_uri, extra FROM client WHERE id=?", id)
+	row := s.db.QueryRow(fmt.Sprintf("SELECT id, secret, redirect_uri, extra FROM %sclient WHERE id=?", s.tablePrefix), id)
 	var c osin.DefaultClient
 	var extra string
 
@@ -95,7 +100,7 @@ func (s *Storage) GetClient(id string) (osin.Client, error) {
 func (s *Storage) UpdateClient(c osin.Client) error {
 	data := gopher_utils.ToStr(c.GetUserData())
 
-	if _, err := s.db.Exec("UPDATE client SET (secret, redirect_uri, extra) = (?, ?, ?) WHERE id=?", c.GetSecret(), c.GetRedirectUri(), data, c.GetId()); err != nil {
+	if _, err := s.db.Exec(fmt.Sprintf("UPDATE %sclient SET (secret, redirect_uri, extra) = (?, ?, ?) WHERE id=?", s.tablePrefix), c.GetSecret(), c.GetRedirectUri(), data, c.GetId()); err != nil {
 		return merry.Wrap(err)
 	}
 	return nil
@@ -105,7 +110,7 @@ func (s *Storage) UpdateClient(c osin.Client) error {
 func (s *Storage) CreateClient(c osin.Client) error {
 	data := gopher_utils.ToStr(c.GetUserData())
 
-	if _, err := s.db.Exec("INSERT INTO client (id, secret, redirect_uri, extra) VALUES (?, ?, ?, ?)", c.GetId(), c.GetSecret(), c.GetRedirectUri(), data); err != nil {
+	if _, err := s.db.Exec(fmt.Sprintf("INSERT INTO %sclient (id, secret, redirect_uri, extra) VALUES (?, ?, ?, ?)", s.tablePrefix), c.GetId(), c.GetSecret(), c.GetRedirectUri(), data); err != nil {
 		return merry.Wrap(err)
 	}
 	return nil
@@ -113,7 +118,7 @@ func (s *Storage) CreateClient(c osin.Client) error {
 
 // RemoveClient removes a client (identified by id) from the database. Returns an error if something went wrong.
 func (s *Storage) RemoveClient(id string) (err error) {
-	if _, err = s.db.Exec("DELETE FROM client WHERE id=?", id); err != nil {
+	if _, err = s.db.Exec(fmt.Sprintf("DELETE FROM %sclient WHERE id=?", s.tablePrefix), id); err != nil {
 		return merry.Wrap(err)
 	}
 	return nil
@@ -127,7 +132,7 @@ func (s *Storage) SaveAuthorize(data *osin.AuthorizeData) (err error) {
 	}
 
 	if _, err = s.db.Exec(
-		"INSERT INTO authorize (client, code, expires_in, scope, redirect_uri, state, created_at, extra) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+		fmt.Sprintf("INSERT INTO %sauthorize (client, code, expires_in, scope, redirect_uri, state, created_at, extra) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", s.tablePrefix),
 		data.Client.GetId(),
 		data.Code,
 		data.ExpiresIn,
@@ -149,7 +154,7 @@ func (s *Storage) LoadAuthorize(code string) (*osin.AuthorizeData, error) {
 	var data osin.AuthorizeData
 	var extra string
 	var cid string
-	if err := s.db.QueryRow("SELECT client, code, expires_in, scope, redirect_uri, state, created_at, extra FROM authorize WHERE code=? LIMIT 1", code).Scan(&cid, &data.Code, &data.ExpiresIn, &data.Scope, &data.RedirectUri, &data.State, &data.CreatedAt, &extra); err == sql.ErrNoRows {
+	if err := s.db.QueryRow(fmt.Sprintf("SELECT client, code, expires_in, scope, redirect_uri, state, created_at, extra FROM %sauthorize WHERE code=? LIMIT 1", s.tablePrefix), code).Scan(&cid, &data.Code, &data.ExpiresIn, &data.Scope, &data.RedirectUri, &data.State, &data.CreatedAt, &extra); err == sql.ErrNoRows {
 		return nil, notFoundError
 	} else if err != nil {
 		return nil, merry.Wrap(err)
@@ -171,7 +176,7 @@ func (s *Storage) LoadAuthorize(code string) (*osin.AuthorizeData, error) {
 
 // RemoveAuthorize revokes or deletes the authorization code.
 func (s *Storage) RemoveAuthorize(code string) (err error) {
-	if _, err = s.db.Exec("DELETE FROM authorize WHERE code=?", code); err != nil {
+	if _, err = s.db.Exec(fmt.Sprintf("DELETE FROM %sauthorize WHERE code=?", s.tablePrefix), code); err != nil {
 		return merry.Wrap(err)
 	}
 	return nil
@@ -208,7 +213,7 @@ func (s *Storage) SaveAccess(data *osin.AccessData) (err error) {
 		return merry.New("data.Client must not be nil")
 	}
 
-	_, err = tx.Exec("INSERT INTO access (client, authorize, previous, access_token, refresh_token, expires_in, scope, redirect_uri, created_at, extra) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", data.Client.GetId(), authorizeData.Code, prev, data.AccessToken, data.RefreshToken, data.ExpiresIn, data.Scope, data.RedirectUri, data.CreatedAt, extra)
+	_, err = tx.Exec(fmt.Sprintf("INSERT INTO %saccess (client, authorize, previous, access_token, refresh_token, expires_in, scope, redirect_uri, created_at, extra) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", s.tablePrefix), data.Client.GetId(), authorizeData.Code, prev, data.AccessToken, data.RefreshToken, data.ExpiresIn, data.Scope, data.RedirectUri, data.CreatedAt, extra)
 	if err != nil {
 		if rbe := tx.Rollback(); rbe != nil {
 			return merry.Wrap(rbe)
@@ -231,7 +236,7 @@ func (s *Storage) LoadAccess(code string) (*osin.AccessData, error) {
 	var result osin.AccessData
 
 	if err := s.db.QueryRow(
-		"SELECT client, authorize, previous, access_token, refresh_token, expires_in, scope, redirect_uri, created_at, extra FROM access WHERE access_token=? LIMIT 1",
+		fmt.Sprintf("SELECT client, authorize, previous, access_token, refresh_token, expires_in, scope, redirect_uri, created_at, extra FROM %saccess WHERE access_token=? LIMIT 1", s.tablePrefix),
 		code,
 	).Scan(
 		&cid,
@@ -265,7 +270,7 @@ func (s *Storage) LoadAccess(code string) (*osin.AccessData, error) {
 
 // RemoveAccess revokes or deletes an AccessData.
 func (s *Storage) RemoveAccess(code string) (err error) {
-	_, err = s.db.Exec("DELETE FROM access WHERE access_token=?", code)
+	_, err = s.db.Exec(fmt.Sprintf("DELETE FROM %saccess WHERE access_token=?", s.tablePrefix), code)
 	if err != nil {
 		return merry.Wrap(err)
 	}
@@ -276,7 +281,7 @@ func (s *Storage) RemoveAccess(code string) (err error) {
 // AuthorizeData and AccessData DON'T NEED to be loaded if not easily available.
 // Optionally can return error if expired.
 func (s *Storage) LoadRefresh(code string) (*osin.AccessData, error) {
-	row := s.db.QueryRow("SELECT access FROM refresh WHERE token=? LIMIT 1", code)
+	row := s.db.QueryRow(fmt.Sprintf("SELECT %saccess FROM refresh WHERE token=? LIMIT 1", s.tablePrefix), code)
 	var access string
 	if err := row.Scan(&access); err == sql.ErrNoRows {
 		return nil, notFoundError
@@ -288,7 +293,7 @@ func (s *Storage) LoadRefresh(code string) (*osin.AccessData, error) {
 
 // RemoveRefresh revokes or deletes refresh AccessData.
 func (s *Storage) RemoveRefresh(code string) error {
-	_, err := s.db.Exec("DELETE FROM refresh WHERE token=?", code)
+	_, err := s.db.Exec(fmt.Sprintf("DELETE FROM %srefresh WHERE token=?", s.tablePrefix), code)
 	if err != nil {
 		return merry.Wrap(err)
 	}
@@ -306,7 +311,7 @@ func (s *Storage) CreateClientWithInformation(id string, secret string, redirect
 }
 
 func (s *Storage) saveRefresh(tx *sql.Tx, refresh, access string) (err error) {
-	_, err = tx.Exec("INSERT INTO refresh (token, access) VALUES (?, ?)", refresh, access)
+	_, err = tx.Exec(fmt.Sprintf("INSERT INTO %srefresh (token, access) VALUES (?, ?)", s.tablePrefix), refresh, access)
 	if err != nil {
 		if rbe := tx.Rollback(); rbe != nil {
 			return merry.Wrap(rbe)

@@ -281,7 +281,7 @@ func (s *Storage) RemoveAccess(code string) (err error) {
 // AuthorizeData and AccessData DON'T NEED to be loaded if not easily available.
 // Optionally can return error if expired.
 func (s *Storage) LoadRefresh(code string) (*osin.AccessData, error) {
-	row := s.db.QueryRow(fmt.Sprintf("SELECT %saccess FROM refresh WHERE token=? LIMIT 1", s.tablePrefix), code)
+	row := s.db.QueryRow(fmt.Sprintf("SELECT access FROM %srefresh WHERE token=? LIMIT 1", s.tablePrefix), code)
 	var access string
 	if err := row.Scan(&access); err == sql.ErrNoRows {
 		return nil, notFoundError

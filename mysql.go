@@ -100,7 +100,7 @@ func (s *Storage) GetClient(id string) (osin.Client, error) {
 func (s *Storage) UpdateClient(c osin.Client) error {
 	data := gopher_utils.ToStr(c.GetUserData())
 
-	if _, err := s.db.Exec(fmt.Sprintf("UPDATE %sclient SET (secret, redirect_uri, extra) = (?, ?, ?) WHERE id=?", s.tablePrefix), c.GetSecret(), c.GetRedirectUri(), data, c.GetId()); err != nil {
+	if _, err := s.db.Exec(fmt.Sprintf("UPDATE %sclient SET secret=?, redirect_uri=?, extra=? WHERE id=?", s.tablePrefix), c.GetSecret(), c.GetRedirectUri(), data, c.GetId()); err != nil {
 		return merry.Wrap(err)
 	}
 	return nil

@@ -1,4 +1,4 @@
-/*A MySQL storage backend for osin oauth2. Additional to implementing the osin.Storage interface, the github.com/felipeweb/osin-mysql/storage.Storage interface defines new methods:
+/*Package mysql is a storage backend for osin oauth2. Additional to implementing the osin.Storage interface, the github.com/felipeweb/osin-mysql/storage.Storage interface defines new methods:
 
 	// CreateClient stores the client in the database and returns an error, if something went wrong.
 	CreateClient(client osin.Client) error
@@ -46,5 +46,5 @@ Limitations
 TL;DR AuthorizeData's Client's and AccessData's UserData field must be string due to language restrictions or an error will be thrown.
 
 In osin, Client, AuthorizeData and AccessData have a UserData property of type interface{}. This does not work well with SQL, because it is not possible to gob decode or unmarshall the data back, since the concrete type is not known. Because osin's storage interface does not support setting the UserData type, this library tries to convert UserData to string and return it as such. With this, you could for example gob encode (use e.g. base64 encode for SQL storage type compatibility) the data before passing it to e.g. FinishAccessRequest and decode it when needed.
- */
+*/
 package mysql

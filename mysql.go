@@ -16,13 +16,13 @@ import (
 )
 
 var schemas = []string{`CREATE TABLE IF NOT EXISTS {prefix}client (
-	id           varchar(255) NOT NULL PRIMARY KEY,
+	id           varchar(255) BINARY NOT NULL PRIMARY KEY,
 	secret 		 varchar(255) NOT NULL,
 	extra 		 varchar(255) NOT NULL,
 	redirect_uri varchar(255) NOT NULL
 )`, `CREATE TABLE IF NOT EXISTS {prefix}authorize (
-	client       varchar(255) NOT NULL,
-	code         varchar(255) NOT NULL PRIMARY KEY,
+	client       varchar(255) BINARY NOT NULL,
+	code         varchar(255) BINARY NOT NULL PRIMARY KEY,
 	expires_in   int(10) NOT NULL,
 	scope        varchar(255) NOT NULL,
 	redirect_uri varchar(255) NOT NULL,
@@ -30,22 +30,22 @@ var schemas = []string{`CREATE TABLE IF NOT EXISTS {prefix}client (
 	extra 		 varchar(255) NOT NULL,
 	created_at   timestamp NOT NULL
 )`, `CREATE TABLE IF NOT EXISTS {prefix}access (
-	client        varchar(255) NOT NULL,
-	authorize     varchar(255) NOT NULL,
-	previous      varchar(255) NOT NULL,
-	access_token  varchar(255) NOT NULL PRIMARY KEY,
-	refresh_token varchar(255) NOT NULL,
+	client        varchar(255) BINARY NOT NULL,
+	authorize     varchar(255) BINARY NOT NULL,
+	previous      varchar(255) BINARY NOT NULL,
+	access_token  varchar(255) BINARY NOT NULL PRIMARY KEY,
+	refresh_token varchar(255) BINARY NOT NULL,
 	expires_in    int(10) NOT NULL,
 	scope         varchar(255) NOT NULL,
 	redirect_uri  varchar(255) NOT NULL,
 	extra 		  varchar(255) NOT NULL,
 	created_at    timestamp NOT NULL
 )`, `CREATE TABLE IF NOT EXISTS {prefix}refresh (
-	token         varchar(255) NOT NULL PRIMARY KEY,
-	access        varchar(255) NOT NULL
+	token         varchar(255) BINARY NOT NULL PRIMARY KEY,
+	access        varchar(255) BINARY NOT NULL
 )`, `CREATE TABLE IF NOT EXISTS {prefix}expires (
 	id 		int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-	token		varchar(255) NOT NULL,
+	token		varchar(255) BINARY NOT NULL,
 	expires_at	timestamp NOT NULL,
 	INDEX expires_index (expires_at),
 	INDEX token_expires_index (token)
